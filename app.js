@@ -3,8 +3,9 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config({ path: '.env.local' });
 
-
+const userRoutes = require('./routes/user-route');
 const app = express();
+
 //Gestion du CORS
 app.use(cors());
 app.use((request, response, next) => {
@@ -27,6 +28,6 @@ mongoose
     .then(() => console.log('Connexion à MongoDB réussie !'))
     .catch((error) => console.log('Connexion à MongoDB échouée !', error));
 app.use(express.json());
-
+app.use('/api', userRoutes);
 
 module.exports = app;
