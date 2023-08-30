@@ -1,9 +1,11 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const path = require('path');
 const cors = require('cors');
 require('dotenv').config({ path: '.env.local' });
 
 const userRoutes = require('./routes/user-route');
+const projectRoutes = require('./routes/project-route')
 const app = express();
 
 //Gestion du CORS
@@ -31,6 +33,7 @@ mongoose
 process.env.IMAGE_DIR = __dirname + '/images/';
 app.use(express.json());
 app.use('/api', userRoutes);
+app.use('/api', projectRoutes)
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 module.exports = app;
