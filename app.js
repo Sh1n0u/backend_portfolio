@@ -15,7 +15,7 @@ app.use((request, response, next) => {
         'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization'
     );
     response.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-    response.setHeader('Access-Control-Allow-Credentials', true); 
+    response.setHeader('Access-Control-Allow-Credentials', true);
     next();
 });
 
@@ -27,7 +27,10 @@ mongoose
     })
     .then(() => console.log('Connexion à MongoDB réussie !'))
     .catch((error) => console.log('Connexion à MongoDB échouée !', error));
+
+process.env.IMAGE_DIR = __dirname + '/images/';
 app.use(express.json());
 app.use('/api', userRoutes);
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 module.exports = app;
