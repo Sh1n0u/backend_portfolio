@@ -25,6 +25,6 @@ exports.login = async (request, response) => {
         }
     }
 
-    const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, { expiresIn: '24h' });
+    const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, { expiresIn: '6h' });
     return response.status(200).json({ message: 'Connexion réussi', token: token });
 };
