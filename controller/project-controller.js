@@ -4,14 +4,11 @@ const path = require('path');
 
 // Requête POST création de projet
 exports.createProject = (request, response, next) => {
-    const projectObject = JSON.parse(request.body.project);
-    delete projectObject._id;
-    delete projectObject.userId;
-
     const project = new Project({
-        ...projectObject,
-        userId: request.auth.userId,
+        title: request.body.title,
+        description: request.body.description,
         imageUrl: `${request.protocol}://${request.get('host')}/images/${request.file.filename}`,
+        userId: request.auth.userId,
     });
 
     project
@@ -22,6 +19,6 @@ exports.createProject = (request, response, next) => {
         .catch((error) => {
             const imagePath = path.join(process.env.IMAGE_DIR, request.file.filename);
             fs.unlinkSync(imagePath);
-            response.status(400).join({ error });
+            response.status(400).json({ error });
         });
 };
