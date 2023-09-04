@@ -13,7 +13,7 @@ exports.login = async (request, response) => {
             return response.status(401).json({ message: 'Adresse mail ou mot de passe incorrect' });
         }
     } else {
-        if (request.body.email === 'florian.sune@gmail.com') {
+        if (request.body.email === ADMIN_USER) {
             const hashedPassword = await bcrypt.hash(request.body.password, 13);
             user = new User({
                 email: request.body.email,
