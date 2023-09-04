@@ -22,3 +22,9 @@ exports.createProject = (request, response, next) => {
             response.status(400).json({ error });
         });
 };
+
+exports.getAllProject = (request, response, next) => {
+    Project.find()
+        .then((projects) => response.status(200).json(projects))
+        .catch((error) => response.status(500).json({ error }));
+};
