@@ -3,13 +3,16 @@ require('dotenv').config({ path: '.env.local' });
 
 module.exports = (request, response, next) => {
     try {
-        const token = request.headers.authorization.split('')[1];
-        const decodedToken = jwt.verify(token.process.env.JWT_SECRET);
+        const token = request.headers.authorization.split(' ')[1];
+        const secretKey = process.env.SECRET_KEY;
+
+        const decodedToken = jwt.verify(token, secretKey);
+
         request.auth = {
             userId: decodedToken.userId,
         };
         next();
     } catch (error) {
-        response.status(401).json({ error });
+        response.status(401).json({ error: 'Authentification échouée' });
     }
 };
