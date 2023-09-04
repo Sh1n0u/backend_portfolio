@@ -5,5 +5,6 @@ const auth = require('../middlewares/auth');
 const multer = require('../middlewares/multer-config');
 
 router.post('/projects', auth, multer, projectController.createProject);
+router.post('/projects', projectController.getAllProject)
 
 module.exports = router;
