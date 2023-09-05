@@ -7,5 +7,6 @@ const multer = require('../middlewares/multer-config');
 router.post('/projects', auth, multer, projectController.createProject);
 router.get('/projects', projectController.getAllProject);
 router.put('/projects/:id', auth, multer, projectController.updateProject);
+router.delete('/projects/:id', auth, multer, projectController.deleteProject)
 
 module.exports = router;
