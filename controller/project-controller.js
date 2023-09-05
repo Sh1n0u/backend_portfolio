@@ -26,11 +26,9 @@ exports.createProject = (request, response, next) => {
 exports.getAllProject = (request, response, next) => {
     Project.find()
         .then((projects) => {
-            console.log('Données des projets:', projects);
             response.status(200).json(projects);
         })
         .catch((error) => {
-            console.error('Erreur lors de la récupération des projets:', error);
             response.status(500).json({ error });
         });
 };
