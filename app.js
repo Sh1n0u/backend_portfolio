@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
 const cors = require('cors');
+// const nodeMailer = require('./middlewares/nodemailer')
 require('dotenv').config({ path: '.env.local' });
 
 const userRoutes = require('./routes/user-route');
@@ -36,6 +37,7 @@ app.use(express.json());
 app.use('/api', userRoutes);
 app.use('/api', projectRoutes);
 app.use('/api', postRoutes);
+// app.use('/api/nodemailer', nodeMailer);
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 module.exports = app;

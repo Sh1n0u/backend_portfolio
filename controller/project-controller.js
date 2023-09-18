@@ -9,6 +9,7 @@ exports.createProject = (request, response, next) => {
         description: request.body.description,
         imageUrl: `${request.protocol}://${request.get('host')}/images/${request.file.filename}`,
         userId: request.auth.userId,
+        selected: request.body.showOnHomepage || false,
     });
 
     project
@@ -20,6 +21,16 @@ exports.createProject = (request, response, next) => {
             const imagePath = path.join(process.env.IMAGE_DIR, request.file.filename);
             fs.unlinkSync(imagePath);
             response.status(400).json({ error });
+        });
+};
+
+exports.getSelectedProject = (request, response, next) => {
+    Project.find({ selected: true })
+        .then((selectedProjects) => {
+            response.status(200).json(selectedProjects);
+        })
+        .catch((error) => {
+            response.status(500).json({ error });
         });
 };
 
@@ -44,15 +55,17 @@ exports.updateProject = (request, response, next) => {
     delete projectObject._userId;
     Project.findOne({ _id: request.params.id })
         .then((project) => {
-            console.log('request.auth.userId:', request.auth.userId);
-            console.log('project.userId:', project.userId);
-            if (project.userId != request.auth.userId) {
-                response.status(401).json({ message: 'Non autorisé' });
-            } else {
-                Project.updateOne({ _id: request.params.id }, { ...projectObject, _id: request.params.id })
-                    .then(() => response.status(200).json({ message: 'Projet modifié' }))
-                    .catch((error) => response.status(401).json({ error }));
+            if (!project) {
+                return response.status(404).json({ message: 'Projet non trouvé' });
             }
+
+            if (project.userId != request.auth.userId) {
+                return response.status(401).json({ message: 'Non autorisé' });
+            }
+
+            Project.updateOne({ _id: request.params.id }, { ...projectObject, _id: request.params.id })
+                .then(() => response.status(200).json({ message: 'Projet modifié' }))
+                .catch((error) => response.status(401).json({ error }));
         })
         .catch((error) => {
             res.status(400).json({ error });
@@ -62,29 +75,28 @@ exports.updateProject = (request, response, next) => {
 exports.deleteProject = (request, response, next) => {
     const projectId = request.params.id;
 
-    Project.findOne({ _id: projectId})
-        .then((project) => {
-            // Vérification de la présence du projet
-            if (!project) {
-                return response(404).json({ message: 'Projet non trouvé'})
-            }
+    Project.findOne({ _id: projectId }).then((project) => {
+        if (!project) {
+            return response.status(404).json({ message: 'Projet non trouvé' });
+        }
 
-            // Vérification de l'autorisation du user
-            if (project.userId !== request.auth.userId) {
-                response.status(401).json({ message: 'Non autorisé'})
-            }
+        // Vérification de l'autorisation du user
+        if (project.userId !== request.auth.userId) {
+            return response.status(401).json({ message: 'Non autorisé' });
+        }
 
-            // Suppression de l'image du projet
-            const imagePath = path.join(process.env.IMAGE_DIR, project.imageUrl.split('/images')[1])
-            fs.unlinkSync(imagePath)
+        // Suppression de l'image du projet
+        const imagePath = path.join(process.env.IMAGE_DIR, project.imageUrl.split('/images')[1]);
+        fs.unlinkSync(imagePath);
 
-            // Suppression du projet
-            Project.deleteOne({ _id: projectId})
-                .then(() => {
-                    response.status(200).json({ message: 'Projet supprimé avec succès'})
-                })
-                .catch((error) => {
-                    response.status(400).json({ error })
-                })
-        })
-}
+        // Suppression du projet
+        Project.deleteOne({ _id: projectId })
+            .then(() => {
+                response.status(200).json({ message: 'Projet supprimé avec succès' });
+            })
+            .catch((error) => {
+                response.status(400).json({ error });
+            });
+    });
+};
+
