@@ -37,7 +37,6 @@ app.use(express.json());
 app.use('/api', userRoutes);
 app.use('/api', projectRoutes);
 app.use('/api', postRoutes);
-// app.use('/api/nodemailer', nodeMailer);
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 module.exports = app;
