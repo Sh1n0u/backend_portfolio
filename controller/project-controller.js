@@ -86,8 +86,14 @@ exports.deleteProject = (request, response, next) => {
         }
 
         // Suppression de l'image du projet
+
         const imagePath = path.join(process.env.IMAGE_DIR, project.imageUrl.split('/images')[1]);
+        try {
             fs.unlinkSync(imagePath);
+        } catch (error) {
+            console.error(error);
+        }
+
 
         // Suppression du projet
         Project.deleteOne({ _id: projectId })
