@@ -13,7 +13,7 @@ const app = express();
 //Gestion du CORS
 app.use(cors());
 app.use((request, response, next) => {
-    response.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    response.setHeader('Access-Control-Allow-Origin', '*');
     response.setHeader(
         'Access-Control-Allow-Headers',
         'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization'
@@ -40,7 +40,7 @@ app.use('/api', postRoutes);
 app.use('/api/ping', (req, res) => {
     res.status(200).json('Ok');
 });
-app.use('/images', express.static(path.join(__dirname, 'images')));
+app.use('/api/images', express.static(path.join(__dirname, 'images')));
 
 module.exports = app;
 

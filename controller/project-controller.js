@@ -7,7 +7,7 @@ exports.createProject = (request, response, next) => {
     const project = new Project({
         title: request.body.title,
         description: request.body.description,
-        imageUrl: `${request.protocol}://${request.get('host')}/images/${request.file.filename}`,
+        imageUrl: `/api/images/${request.file.filename}`,
         userId: request.auth.userId,
         selected: request.body.showOnHomepage || false,
     });
@@ -87,7 +87,7 @@ exports.deleteProject = (request, response, next) => {
 
         // Suppression de l'image du projet
         const imagePath = path.join(process.env.IMAGE_DIR, project.imageUrl.split('/images')[1]);
-        fs.unlinkSync(imagePath);
+            fs.unlinkSync(imagePath);
 
         // Suppression du projet
         Project.deleteOne({ _id: projectId })
