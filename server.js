@@ -14,6 +14,7 @@ const normalizePort = (val) => {
 };
 
 const port = normalizePort(process.env.PORT || '4000');
+console.log('port:', port)
 app.set('port', port);
 
 const errorHandler = (error) => {
