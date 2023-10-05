@@ -46,4 +46,19 @@ server.on('listening', () => {
     console.log('Listening on ' + bind);
 });
 
+process.on('SIGINT', () => {
+    console.log("Caught interrupt signal");
+    process.exit();
+});  // CTRL+C
+
+process.on('SIGQUIT', () => {
+    console.log("Caught interrupt signal");
+    process.exit();
+}); // Keyboard quit
+
+process.on('SIGTERM', () => {
+    console.log("Caught interrupt signal");
+    process.exit();
+}); // `kill` command
+
 server.listen(port);
